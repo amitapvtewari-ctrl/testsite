@@ -33,5 +33,5 @@ steps:
 - task: AzureWebApp@1
   inputs:
     azureSubscription: 'azure-connection'   # service connection name
-    appName: 'apvcicdtest'                  # Azure App Service name
+    appName: 'http://apvcicdtest-ffcyh6asa8gwccgv.centralindia-01.azurewebsites.net'                  # Azure App Service name
     package: '$(Build.ArtifactStagingDirectory)/site.zip'
