@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  name: Default   # self-hosted agent pool
+  vmImage: ubuntu-latest
 
 steps:
 
