@@ -2,14 +2,36 @@ trigger:
 - main
 
 pool:
-  name: Default
-
+  name: Default   # self-hosted agent pool
 
 steps:
+
+# STEP 1 – Copy Files
 - task: CopyFiles@2
   inputs:
     SourceFolder: '$(Build.SourcesDirectory)'
     Contents: '**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
+# STEP 2 – Publish Artifact
 - task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: 'drop'
+    publishLocation: 'Container'
+
+# STEP 3 – Zip Files (Deploy से पहले जरूरी)
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.SourcesDirectory)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/site.zip'
+    replaceExistingArchive: true
+
+# STEP 4 – Deploy to Azure App Service
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'azure-connection'   # service connection name
+    appName: 'apvcicdtest'                  # Azure App Service name
+    package: '$(Build.ArtifactStagingDirectory)/site.zip'
